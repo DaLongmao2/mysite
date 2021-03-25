@@ -1,5 +1,8 @@
 import datetime
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
+
+from blog.models import Blog
 from read_statistics.models import ReadNum, ReadDetail
 from django.utils import timezone
 from django.db.models import Sum
@@ -95,15 +98,25 @@ def get_yesterday_hot_date(content_type):
 
 
 # 七天内 阅读最高的
-def get_7_days_hot_date(content_type):
-    # 减去一天差量 获取到昨天
+def get_7_days_hot_blogs():
+    today = timezone.now().date()
     date = today - datetime.timedelta(days=7)
-    # 小于今天 大于7天前
-    # 阅读量 倒序
-    # TODO: 分组！！！！！
-    read_details = ReadDetail.objects\
-        .filter(content_type=content_type, date__lt=today, date__gt=date)\
-        .values('content_type', 'object_id')\
-        .annotate(read_num=Sum('read_num'))\
-        .order_by('-read_num')
-    return read_details
+    blogs = Blog.objects.filter(read_details__date__lt=today, read_details__date__gte=date)\
+        .values('id', 'title')\
+        .annotate(read_num_sum=Sum('read_details__read_num'))\
+        .order_by('-read_num_sum')[0:7]
+
+
+    # 获取 7天热门阅读的的缓存数据
+    host_blogs_for_7_days = cache.get('host_blogs_for_7_days')
+    if host_blogs_for_7_days is None:
+        host_blogs_for_7_days = blogs
+        cache.set('host_blogs_for_7_days', host_blogs_for_7_days, 3600)
+        print('计算中...')
+    else:
+        print('使用缓存了')
+
+    print(host_blogs_for_7_days)
+
+
+    return host_blogs_for_7_days
