@@ -112,11 +112,7 @@ def get_7_days_hot_blogs():
     if host_blogs_for_7_days is None:
         host_blogs_for_7_days = blogs
         cache.set('host_blogs_for_7_days', host_blogs_for_7_days, 3600)
-        print('计算中...')
-    else:
-        print('使用缓存了')
-
-    print(host_blogs_for_7_days)
-
-
+    #   print('计算中...')
+    # else:
+    #     print('使用缓存了..')
     return host_blogs_for_7_days

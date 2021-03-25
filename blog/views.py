@@ -1,3 +1,6 @@
+from django.contrib.contenttypes.models import ContentType
+
+from comment.models import Comment
 from read_statistics.utils import read_statistics_once_read
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import Blog, BlogType
@@ -52,7 +55,6 @@ def get_blog_list_common_data(request, blogs_all_list):
 def blog_list(request):
     blogs_all_list = Blog.objects.all()
     context = get_blog_list_common_data(request, blogs_all_list)
-    print(context)
     return render(request, 'blog/blog_list.html', context)
 
 
@@ -78,6 +80,9 @@ def blogs_with_date(request, year, month):
 def blog_detail(request, blog_pk):
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
+    # 获取 ContentType 表中对应的 blog 对象
+    blog_content_type = ContentType.objects.get_for_model(blog)
+    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk)
     # if not request.COOKIES.get('blog_%s_read' % blog_pk):
         # 第一种方法
         # if BlogReadNum.objects.filter(blog=blog).count():
@@ -87,10 +92,17 @@ def blog_detail(request, blog_pk):
         # readnum.read_num += 1
         # readnum.save()
     # response.set_cookie('blog_%s_read' % blog_pk, 'true', expires=datetime)
+    # 阅读数量
     read_cookie = read_statistics_once_read(request, blog)
+    # 上一页
     context['previous_blog'] = Blog.objects.filter(create_time__gt=blog.create_time).last()
+    # 下一页
     context['next_blog'] = Blog.objects.filter(create_time__lt=blog.create_time).first()
+    # Blog
     context['blog'] = blog
+
+    # 返回评论内容
+    context['comments'] = comments
     response = render(request, "blog/blog_detail.html", context)
     # max_age 过期时间 多少秒之后
     # expires 指定时间过期

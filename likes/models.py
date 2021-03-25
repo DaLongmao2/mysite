@@ -14,6 +14,9 @@ class LikeCount(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    class Meta:
+        db_table = 'LikeCount'
+
 
 class LikeRecord(models.Model):
     # 点赞人
@@ -26,3 +29,6 @@ class LikeRecord(models.Model):
     # 记录对应模型的 主键
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        db_table = 'LikeRecord'

@@ -17,23 +17,27 @@ class ReadNumExpandMethod():
 
 
 class ReadNum(models.Model):
-    read_num = models.IntegerField(default=0)
-
     # 指向 ContentType 的模型
     content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
     # 记录对应模型的 主键
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    read_num = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'ReadNum'
 
 
 class ReadDetail(models.Model):
-    date = models.DateField(default=timezone.now)
-    read_num = models.IntegerField(default=0)
-
     # 指向 ContentType 的模型
     content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
     # 记录对应模型的 主键
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    date = models.DateField(default=timezone.now)
+    read_num = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'ReadDetail'

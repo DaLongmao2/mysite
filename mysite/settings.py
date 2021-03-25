@@ -30,7 +30,9 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'blog',
     'read_statistics',
-    'likes'
+    'likes',
+    # 评论
+    'comment'
 ]
 
 # 富文本编辑框
