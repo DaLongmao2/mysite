@@ -5,7 +5,7 @@ from read_statistics.utils import get_seven_days_read_data, get_today_hot_data, 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import auth
 from django.urls import reverse
-
+from.forms import LoginForm
 
 def home(request):
     context = {}
@@ -21,14 +21,19 @@ def home(request):
 
 
 def login(request):
-    username = request.POST.get('username', '')
-    password = request.POST.get('password', '')
-    # 使用系统自带用户系统
-    # 使用authenticate方法进行验证
-    referer = request.META.get('HTTP_REFERER', reverse('home'))
-    user = auth.authenticate(request, username=username, password=password)
-    if user is not None:
-        auth.login(request, user)
-        return redirect(referer)
-    else:
-        return render(request, 'error.html', {'message': '用户名或密码不正确！'})
+    # username = request.POST.get('username', '')
+    # password = request.POST.get('password', '')
+    # # 使用系统自带用户系统
+    # # 使用authenticate方法进行验证
+    # referer = request.META.get('HTTP_REFERER', reverse('home'))
+    # user = auth.authenticate(request, username=username, password=password)
+    # if user is not None:
+    #     auth.login(request, user)
+    #     return redirect(referer)
+    # else:
+    #     return render(request, 'error.html', {'message': '用户名或密码不正确！'})
+
+    login_form = LoginForm()
+    context = {}
+    context['login_form'] = login_form
+    return render(request, 'login.html', context)

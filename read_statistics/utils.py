@@ -48,7 +48,6 @@ from django.db.models import Sum
 
 today = timezone.now().date()
 
-
 # 记录阅读数量
 def read_statistics_once_read(request, obj):
     ct = ContentType.objects.get_for_model(obj)
@@ -88,6 +87,7 @@ def get_seven_days_read_data(content_type):
 def get_today_hot_data(content_type):
     read_details = ReadDetail.objects.filter(content_type=content_type, date=today).order_by('-read_num')[0:7]
     return read_details
+
 
 # 昨天 阅读最高的
 def get_yesterday_hot_date(content_type):

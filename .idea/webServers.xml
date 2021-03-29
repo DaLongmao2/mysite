@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="3c21d556-e733-4516-b820-76059dcc7819" name="Blog" url="http://114.55.25.248">
-        <fileTransfer rootFolder="/home/longmao/Python" accessType="SFTP" host="114.55.25.248" port="22" sshConfigId="02fbbda4-d22b-4873-b354-53c68a211908" sshConfig="root@114.55.25.248:22 password">
+      <webServer id="3c21d556-e733-4516-b820-76059dcc7819" name="阿里云" url="http://114.55.25.248">
+        <fileTransfer rootFolder="/home/longmao/MyBool_Django" accessType="SFTP" host="114.55.25.248" port="22" sshConfigId="02fbbda4-d22b-4873-b354-53c68a211908" sshConfig="root@114.55.25.248:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
