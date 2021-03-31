@@ -13,7 +13,7 @@
             {# 左 #}
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-10">
                 {# 博客列表 #}
-                <div class="panel panel-default">
+                <div class="panel panel-info">
                     <div class="panel-heading">
                         {% block blog_list_title %}{% endblock %}博客列表（一共有{{ page_of_blogs.paginator.count }}篇博客）</div>
                     <div class="panel-body">
@@ -104,8 +104,8 @@
             {# 右 #}
             <div class="hidden-xs col-sm-4 col-md-4 col-lg-2">
                 {# 分类 #}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h4>博客分类</h4></div>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">博客分类</div>
                     <div class="panel-body">
                         <ul class="blog-types">
                             {% for blog_type in blog_types %}
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 {# 时间归档 #}
-                <div class="panel panel-default">
+                <div class="panel panel-danger">
                     <div class="panel-heading">日期归档</div>
                     <div class="panel-body">
                         <ul class="">

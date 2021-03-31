@@ -7,11 +7,14 @@ from read_statistics import views as v
 from mysite import views
 
 urlpatterns = [
-    path('', views.home ,name='home'),
+    path('', views.home , name='home'),
+    path('login/', views.login, name='login'),
+    path('register/', views.register, name='register'),
+    
     path('admin/', admin.site.urls),
+
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('blog/', include('blog.urls')),
-    path('login/', views.login, name='login'),
     path('comment/', include('comment.urls')),
     path('like/', include('likes.urls')),
 ]

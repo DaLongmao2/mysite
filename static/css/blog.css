@@ -9,9 +9,9 @@ div.blog:not(:last-child) {
 }
 
 /*列表 分类 外层div*/
-.panel{
-    border: 1px #5bc0de solid;
-}
+/*.panel{*/
+/*    border: 1px #5bc0de solid;*/
+/*}*/
 
 /*标题的上边距*/
 div.blog h3 {
