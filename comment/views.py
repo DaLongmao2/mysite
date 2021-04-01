@@ -1,34 +1,31 @@
 from django.shortcuts import render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-
+from .forms import CommentForm
 from comment.models import Comment
+from django.http import JsonResponse
 
 
 def update_comment(request):
     referer = request.META.get('HTTP_REFERER', reverse('home'))
-    user = request.user
-    if user.is_authenticated:
-        return render(request, 'error.html', {'message': '用户不存在'})
-    text = request.POST.get('text', '').stript()
-    if text == '':
-        return render(request, 'error.html', {'message': '评论不能为空'})
-    content_type = request.POST.get('content_type', '')
-    object_id = int(request.POST.get('object_id', ''))
+    comment_form = CommentForm(request.POST, user=request.user)
+    data = {}
 
-    # Blog|blog
-    # model_class = ContentType.objects.get(model=content_type)
-    # blog.model.Blog
-    model_class = ContentType.objects.get(model=content_type).model_class()
-    model_obj = model_class.objects.get(pk=object_id)
-
-    try:
+    if comment_form.is_valid():
+        # 检查通过，保存数据
         comment = Comment()
-        comment.user = user
-        comment.text = text
-        comment.content_object = model_obj
+        comment.user = comment_form.cleaned_data['user']
+        comment.text = comment_form.cleaned_data['text']
+        comment.content_object = comment_form.cleaned_data['content_object']
         comment.save()
-    except Exception as e:
-        return render(request, 'error.html', {'message': 'Comment Object is null'})
 
-    return redirect(referer)
+        # 返回数据
+        data['status'] = 'SUCCESS'
+        data['username'] = comment.user.username
+        data['comment_time'] = comment.comment_time.strftime('%Y-%m-%d %H:%M:%S')
+        data['text'] = comment.text
+    else:
+        #return render(request, 'error.html', {'message': comment_form.errors, 'redirect_to': referer})
+        data['status'] = 'ERROR'
+        data['message'] = list(comment_form.errors.values())[0][0]
+    return JsonResponse(data)

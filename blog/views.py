@@ -7,6 +7,7 @@ from blog.models import Blog, BlogType
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.db.models import Count
+from comment.forms import CommentForm
 
 
 # 发帖  删帖   登录  注册  评论  阅读量   热门帖子  收藏
@@ -103,6 +104,8 @@ def blog_detail(request, blog_pk):
 
     # 返回评论内容
     context['comments'] = comments
+    # 返回 CommentForm 实例化表单
+    context['comments_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk})
     response = render(request, "blog/blog_detail.html", context)
     # max_age 过期时间 多少秒之后
     # expires 指定时间过期

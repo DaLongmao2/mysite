@@ -41,8 +41,13 @@
 
 
             <ul class="nav navbar-nav  navbar-right">
-                <li class="{% block login_home_active %}{% endblock %}"><a href="#">登录 <span class="sr-only">(current)</span></a></li>
-                <li class="{% block register_home_active %}{% endblock %}"><a href="#">注册<span class="sr-only">(current)</span></a></li>
+                {% if not request.user %}
+                    <li class=""><a href="#">{{ request.user }}<span class="sr-only">(current)</span></a></li>
+                    <li class=""><a href="#">退出<span class="sr-only">(current)</span></a></li>
+                {% else%}
+                    <li class=""><a href="{% url 'login' %}">登录 <span class="sr-only">(current)</span></a></li>
+                    <li class=""><a href="{% url 'register' %}">注册<span class="sr-only">(current)</span></a></li>
+                {% endif %}
             </ul>
 
 
@@ -51,5 +56,6 @@
         </div>
     </div>
     {% block content %}{% endblock %}
+    {% block script_extends %}{% endblock %}
 </body>
 </html>
