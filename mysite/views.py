@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from blog.models import Blog
+from blog.models import Blog, BlogType
 from read_statistics.utils import get_seven_days_read_data, get_today_hot_data, get_yesterday_hot_date, \
     get_7_days_hot_blogs
 from django.contrib.contenttypes.models import ContentType
@@ -16,6 +16,8 @@ def home(request):
 
     context['read_nums'] = read_nums
     context['dates'] = dates
+    context['blogs'] = Blog.objects.all()
+    context['blog_types'] = BlogType.objects.all()
     context['today_hot_dat'] = get_today_hot_data(blog_content_type)
     context['yesterday_hot_dat'] = get_yesterday_hot_date(blog_content_type)
     context['hot_data_for_7_days'] = get_7_days_hot_blogs()
@@ -66,3 +68,8 @@ def register(request):
     context = {}
     context['reg_form'] = reg_form
     return render(request, 'register.html', context)
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect(request.GET.get('next_to'), reverse('home'))

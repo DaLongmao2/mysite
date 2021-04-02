@@ -21,7 +21,7 @@ class BlogType(models.Model):
 class Blog(models.Model, ReadNumExpandMethod):
     # 使用 django 自带用户系统
     title = models.CharField(max_length=50)
-    blog_type = models.ForeignKey(BlogType, on_delete=models.DO_NOTHING)
+    blog_type = models.ForeignKey(BlogType, on_delete=models.DO_NOTHING, related_name='blog')
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     # content = RichTextField()
     content = RichTextUploadingField()

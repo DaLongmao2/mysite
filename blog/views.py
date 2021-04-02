@@ -83,7 +83,7 @@ def blog_detail(request, blog_pk):
     blog = get_object_or_404(Blog, pk=blog_pk)
     # 获取 ContentType 表中对应的 blog 对象
     blog_content_type = ContentType.objects.get_for_model(blog)
-    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk)
+    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk, root=None)
     # if not request.COOKIES.get('blog_%s_read' % blog_pk):
         # 第一种方法
         # if BlogReadNum.objects.filter(blog=blog).count():
@@ -105,7 +105,7 @@ def blog_detail(request, blog_pk):
     # 返回评论内容
     context['comments'] = comments
     # 返回 CommentForm 实例化表单
-    context['comments_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk})
+    context['comments_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk, 'reply_comment_id': 0})
     response = render(request, "blog/blog_detail.html", context)
     # max_age 过期时间 多少秒之后
     # expires 指定时间过期
