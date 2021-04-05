@@ -18,7 +18,7 @@ class ReadNumExpandMethod():
 
 class ReadNum(models.Model):
     # 指向 ContentType 的模型
-    content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     # 记录对应模型的 主键
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')

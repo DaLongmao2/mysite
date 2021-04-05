@@ -2,6 +2,8 @@
 {% block title %}我的网站{% endblock %}
 {% block nav_blog_active %}active{% endblock %}
 {% load static %}
+{% load comment_tages %}
+
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
@@ -41,6 +43,9 @@
 
                                         <span>阅读量:</span>
                                         <span class="text_right">{{ blog.get_read_num }}</span>
+
+                                        <span>评论量:</span>
+                                        <span class="text_right">{% get_comment_count blog %}</span>
                                     </p>
                                 </div>
                             </div>

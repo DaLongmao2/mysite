@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 
 from comment.models import Comment
+from mysite.forms import LoginForm
 from read_statistics.utils import read_statistics_once_read
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import Blog, BlogType
@@ -102,10 +103,17 @@ def blog_detail(request, blog_pk):
     # Blog
     context['blog'] = blog
 
+    # 点赞登录
+    context['login_form'] = LoginForm()
+
     # 返回评论内容
     context['comments'] = comments
     # 返回 CommentForm 实例化表单
     context['comments_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk, 'reply_comment_id': 0})
+
+    # 查询 评论 的 数量
+    # context['comments_count'] = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk).count()
+    print(Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk).count())
     response = render(request, "blog/blog_detail.html", context)
     # max_age 过期时间 多少秒之后
     # expires 指定时间过期

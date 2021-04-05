@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from blog.models import Blog, BlogType
 from read_statistics.utils import get_seven_days_read_data, get_today_hot_data, get_yesterday_hot_date, \
@@ -73,3 +74,15 @@ def register(request):
 def logout(request):
     auth.logout(request)
     return redirect(request.GET.get('next_to'), reverse('home'))
+
+
+def login_for_medal(request):
+    login_form = LoginForm(request.POST)
+    data = {}
+    if login_form.is_valid():
+        user = login_form.cleaned_data['user']
+        auth.login(request, user)
+        data['status'] = 'SUCCESS'
+    else:
+        data['status'] = 'ERROR'
+    return JsonResponse(data)

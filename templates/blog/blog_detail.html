@@ -1,4 +1,6 @@
 {% extends 'blog/blog_list.html' %}
+{% load comment_tages %}
+{% load likes_tags %}
 {% block title %}{{ blog.title }}{% endblock %}
 
 {% block head %}
@@ -15,28 +17,28 @@
                     <div class="panel-heading">
                         <h3 align="center" style="margin-top: 0.5em">{{ blog.title }}</h3>
                     </div>
-                    <div class="panel-body">
+                    <div style="margin: 1em auto;">
+                        <ul class="blog-info-description pager">
+                            <li>分类：<a href="{% url "blog_with_type" blog.blog_type.pk %}">{{ blog.blog_type }}</a></li>
+                            <li>作者：<a href="">{{ blog.author }}</a></li>
+                            <li>发表日期：<a href="">{{ blog.create_time | date:"Y-m-d H:n:s" }}</a></li>
+                            <li>阅读量：<a href="">{{ blog.get_read_num }}</a></li>
+                            <li>评论量：<a href="">{% get_comment_count blog %}</a></li>
+                            <li>评论量：<a href="">{% get_comment_count blog %}</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-body" style="margin-bottom: 10em">
                         <div class="blog-content">{{ blog.content|safe }}</div>
                     </div>
                 </div>
 
-
-                {#                <h3>{{ blog.title }}</h3>#}
-
-                {#                <div class="blog-content">{{ blog.content|safe }}</div>#}
-                {#                <div class="like active">#}
-                {#                    <span class="glyphicon glyphicon-thumbs-up"#}
-                {#                          onclick="likeChange(this, 'blog', {{ blog.pk }})"></span>#}
-                {#                    <span class="like-num">0</span> 喜欢#}
-                {#                </div>#}
+                <div class="like" onclick="likeChange(this, '{% get_content_type blog %}', {{ blog.pk }})">
+                    <span class="glyphicon glyphicon-thumbs-up {% get_like_status blog %}"></span>
+                    <span class="liked-num">{% get_like_count blog %}</span>
+                    <span>喜欢</span>
+                </div>
 
                 <ul class="pager">
-                                <ul class="blog-info-description">
-                                    <li>分类：<a href="{% url "blog_with_type" blog.blog_type.pk %}">{{ blog.blog_type }}</a></li>
-                                    <li>作者：{{ blog.author }}</li>
-                                    <li>发表日期：{{ blog.create_time | date:"Y-m-d H:n:s" }}</li>
-                                    <li>阅读量：{{ blog.get_read_num }}</li>
-                                </ul>
                     {% if previous_blog %}
                         <li class="previous"><a href="{% url 'blog_detail' previous_blog.pk %}"><span
                                 aria-hidden="true">&larr;</span>{{ previous_blog.title }} </a></li>
@@ -98,6 +100,10 @@
                                         <div id="comment_{{ comment.pk }}">
                                             {{ comment.text|safe }}
                                         </div>
+                                    <div class="like" onclick="likeChange(this, '{% get_content_type comment %}', {{ comment.pk }})">
+                                    <span class="glyphicon glyphicon-thumbs-up {% get_like_status comment %}"></span>
+                                    <span class="liked-num">{% get_like_count comment %}</span>
+                                </div>
 
                                         <a href="javascript:reply({{ comment.pk }})">回复</a>
                                         {% for reply in comment.root_comment.all %}
@@ -109,6 +115,11 @@
                                                 <div id="comment_{{ reply.pk }}">
                                                     {{ reply.text|safe }}
                                                 </div>
+
+                                        <div class="like" onclick="likeChange(this, '{% get_content_type reply %}', {{ reply.pk }})">
+                                            <span class="glyphicon glyphicon-thumbs-up {% get_like_status reply %}"></span>
+                                            <span class="liked-num">{% get_like_count reply %}</span>
+                                        </div>
                                                 <a href="javascript:reply({{ reply.pk }})">回复</a>
                                                 {#                                        {{ reply.user.username }}#}
                                             </div>
@@ -120,6 +131,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <form id="login_medal_form" action="{% url 'login_for_medal' %}" method="POST">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">登录</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            {% for field in login_form %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                            {% endfor %}
+                            <span id="login_medal_tip" class="text-danger"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">登录</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
